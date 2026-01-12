@@ -1,12 +1,9 @@
 {
-  "name": "hypersocial-claude-plugins",
+  "name": "hypersocial",
   "version": "1.0.0",
-  "description": "HyperSocial's collection of Claude Code plugins, agents, and skills",
+  "description": "HyperSocial tools including SWARM git worktree manager and extract-pattern agent",
   "author": {
-    "name": "hypersocialinc",
+    "name": "HyperSocial",
     "url": "https://github.com/hypersocialinc"
-  },
-  "agents": "./agents/",
-  "skills": "./skills/",
-  "commands": "./commands/"
+  }
 }
