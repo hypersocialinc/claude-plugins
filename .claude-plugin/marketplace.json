@@ -15,6 +15,15 @@
       },
       "source": "./plugins/hypersocial",
       "category": "productivity"
+    },
+    {
+      "name": "ralph",
+      "description": "Autonomous feature development with story-based tracking, review gates, and crash recovery",
+      "author": {
+        "name": "HyperSocial"
+      },
+      "source": "./plugins/hypersocial/ralph",
+      "category": "productivity"
     }
   ]
 }
