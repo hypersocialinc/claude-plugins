@@ -1,7 +1,7 @@
 ---
 name: extract-pattern
 description: Extract implementation patterns from hypersocialinc GitHub repos. Use when you need to find how something was implemented in tapjam, nicosia, or other internal projects.
-tools: Bash, Read, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+tools: Bash, Read, Glob, Grep, WebFetch, WebSearch
 model: sonnet
 ---
 
@@ -31,8 +31,8 @@ Search for the requested pattern/feature across hypersocialinc repos and return 
    ```
 
 4. **Fetch external docs** (if pattern involves Clerk, Convex, Stripe, etc.):
-   - Use `mcp__context7__resolve-library-id` to find library
-   - Use `mcp__context7__get-library-docs` to get documentation
+   - Use WebSearch to find relevant documentation
+   - Use WebFetch to get documentation pages
 
 ## Response Format
 
