@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hypersocial-plugins",
+  "description": "Claude Code plugins used by HyperSocial",
+  "owner": {
+    "name": "HyperSocial",
+    "email": "hello@hypersocial.com"
+  },
+  "plugins": [
+    {
+      "name": "hypersocial",
+      "description": "HyperSocial tools including SWARM git worktree manager and extract-pattern agent",
+      "author": {
+        "name": "HyperSocial"
+      },
+      "source": "./plugins/hypersocial",
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,34 +1,31 @@
 # HyperSocial Claude Plugins
 
-A collection of Claude Code plugins, agents, skills, and commands used by HyperSocial.
+A marketplace of Claude Code plugins used by HyperSocial.
 
 ## Installation
 
-```bash
-claude plugins:add hypersocialinc/claude-plugins
-```
+1. Open Claude Code
+2. Run `/plugin` and select "Add Marketplace"
+3. Enter: `hypersocialinc/claude-plugins`
+4. Then install the `hypersocial` plugin from the marketplace
 
-Or clone manually:
-```bash
-git clone https://github.com/hypersocialinc/claude-plugins.git ~/.claude/plugins/hypersocial
-```
+## Available Plugins
 
-## Contents
+### hypersocial
 
-### Agents
+Tools and agents for HyperSocial development workflows.
 
+**Agents:**
 | Agent | Description |
 |-------|-------------|
 | `extract-pattern` | Search hypersocialinc GitHub repos to extract implementation patterns |
 
-### Skills
-
+**Skills:**
 | Skill | Description |
 |-------|-------------|
 | `swarm` | Git worktree manager for parallel feature development |
 
-### Commands
-
+**Commands:**
 | Command | Description |
 |---------|-------------|
 | `/swarm-init` | Analyze repo and generate `swarm.json` config |
@@ -65,12 +62,18 @@ Run directly to generate config:
 
 ```
 claude-plugins/
-├── plugin.json          # Main manifest
-├── agents/
-│   └── extract-pattern.md
-├── skills/
-│   └── swarm/
-│       └── SKILL.md
-└── commands/
-    └── swarm-init.md
+├── .claude-plugin/
+│   └── marketplace.json     # Marketplace manifest
+├── plugins/
+│   └── hypersocial/         # Plugin
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── agents/
+│       │   └── extract-pattern.md
+│       ├── skills/
+│       │   └── swarm/
+│       │       └── SKILL.md
+│       └── commands/
+│           └── swarm-init.md
+└── README.md
 ```
