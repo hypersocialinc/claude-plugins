@@ -1,0 +1,12 @@
+{
+  "name": "hypersocial-claude-plugins",
+  "version": "1.0.0",
+  "description": "HyperSocial's collection of Claude Code plugins, agents, and skills",
+  "author": {
+    "name": "hypersocialinc",
+    "url": "https://github.com/hypersocialinc"
+  },
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
