@@ -292,23 +292,37 @@ ${story.blockers && story.blockers.length > 0 ? `\nBlockers:\n${story.blockers.j
 
     function renderRecentActivity(progressText) {
       const activityDiv = document.getElementById('recent-activity');
-      const lines = progressText.split('\n').filter(l => l.trim());
+      const lines = progressText.split('\n');
 
-      // Parse recent entries (already in reverse chronological order)
+      // Parse entries in the format: === DATE - STORY-ID STATUS ===
       const activities = [];
       let currentEntry = null;
 
-      for (const line of lines) {
-        if (line.match(/^(COMPLETED|STARTED|ERROR):/)) {
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // Match entries like: === 2026-01-13 - SKETCH-001 COMPLETED ===
+        const entryMatch = line.match(/^===\s+(.+?)\s+-\s+(.+?)\s+(COMPLETED|STARTED|ERROR)\s+===$/);
+        if (entryMatch) {
           if (currentEntry) activities.push(currentEntry);
-          const match = line.match(/^(COMPLETED|STARTED|ERROR): (.+)/);
+
+          const [, date, storyId, status] = entryMatch;
           currentEntry = {
-            type: match[1],
-            text: match[2],
+            type: status,
+            text: `${storyId}`,
+            date: date,
             details: []
           };
-        } else if (currentEntry && line.trim()) {
-          currentEntry.details.push(line.trim());
+
+          // Collect details until next entry or separator
+          let j = i + 1;
+          while (j < lines.length && !lines[j].trim().startsWith('===')) {
+            const detailLine = lines[j].trim();
+            if (detailLine && !detailLine.startsWith('#') && detailLine !== '---') {
+              currentEntry.details.push(detailLine);
+            }
+            j++;
+          }
         }
       }
       if (currentEntry) activities.push(currentEntry);
@@ -331,13 +345,18 @@ ${story.blockers && story.blockers.length > 0 ? `\nBlockers:\n${story.blockers.j
           'ERROR': 'bg-red-50'
         };
 
+        // Show first 5 detail lines
+        const displayDetails = a.details.slice(0, 5);
+
         return `
           <div class="${bgColors[a.type]} rounded-lg p-3 border border-gray-200">
-            <div class="flex items-start gap-2 text-sm">
-              <span class="text-xl">${icons[a.type]}</span>
+            <div class="flex items-start gap-2">
+              <span class="text-lg flex-shrink-0">${icons[a.type]}</span>
               <div class="flex-1 min-w-0">
-                <div class="${colors[a.type]} font-semibold mb-1">${a.text}</div>
-                ${a.details.map(d => `<div class="text-gray-600 text-xs leading-relaxed truncate" title="${d}">${d}</div>`).join('')}
+                <div class="${colors[a.type]} font-semibold text-sm mb-1">${a.text}</div>
+                <div class="text-gray-500 text-xs mb-2">${a.date}</div>
+                ${displayDetails.map(d => `<div class="text-gray-700 text-xs leading-relaxed mb-1">${d}</div>`).join('')}
+                ${a.details.length > 5 ? `<div class="text-gray-400 text-xs italic mt-1">+${a.details.length - 5} more lines...</div>` : ''}
               </div>
             </div>
           </div>
