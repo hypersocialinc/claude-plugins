@@ -54,21 +54,21 @@ mkdir -p .ralph/<feature-name>
 ### 5. Copy Templates
 
 Copy from plugin templates to `.ralph/<feature-name>/`:
-- `claude.md` (workflow instructions)
 - `prd.json` (empty story list)
 - `plan.md` (feature template)
 - `progress.txt` (initialized log)
-- `ralph.sh` (bash loop script)
+- `board/` directory with `board.html` (visual dashboard)
+
+Create board directory:
+```bash
+mkdir -p .ralph/<feature-name>/board
+cp ${CLAUDE_PLUGIN_ROOT}/templates/board.html .ralph/<feature-name>/board/index.html
+```
 
 Replace template variables:
 - `{{FEATURE_NAME}}` → feature name
 - `{{DATE}}` → current date (YYYY-MM-DD)
 - `{{STORY_COUNT}}` → 0 (will be filled by planner)
-
-Make ralph.sh executable:
-```bash
-chmod +x .ralph/<feature-name>/ralph.sh
-```
 
 ### 6. Handle Existing Spec (if --from flag)
 
