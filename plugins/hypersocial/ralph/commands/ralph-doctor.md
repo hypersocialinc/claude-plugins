@@ -20,22 +20,15 @@ Run a health check on a Ralph feature and fix common issues.
 
 2. **Validate file structure**
    Check that all required files exist:
-   - `.ralph/{feature}/claude.md` - Workflow instructions
    - `.ralph/{feature}/plan.md` - Feature specification
    - `.ralph/{feature}/prd.json` - Stories with status
    - `.ralph/{feature}/progress.txt` - Work log
-   - `.ralph/{feature}/ralph.sh` - Bash loop script
+
+   Note: `claude.md` is no longer used (agent-based architecture).
 
    Report any missing files.
 
-3. **Check ralph.sh version**
-   Read the current `ralph.sh` and check if it has the location-agnostic code:
-   - Look for "PROJECT_ROOT" variable
-   - Look for "cd \"\$PROJECT_ROOT\"" line
-
-   If missing, offer to update it with the latest template from `${CLAUDE_PLUGIN_ROOT}/templates/ralph.sh`
-
-4. **Validate prd.json structure**
+3. **Validate prd.json structure**
    Check that `prd.json` has:
    - Valid JSON syntax
    - `stories` array
@@ -44,55 +37,51 @@ Run a health check on a Ralph feature and fix common issues.
 
    Report any issues found.
 
-5. **Check for stale or blocked stories**
+4. **Check for stale or blocked stories**
    - Count stories by status
    - Identify stories marked "blocked" and show their blockers
-   - Identify stories with "in_progress" status but no recent STARTED timestamp
+   - Identify stories with "in_progress" status but no recent STARTED timestamp in progress.txt
 
    These may indicate crashed iterations or forgotten work.
 
-6. **Verify git branch**
+5. **Verify git branch**
    - Check if current branch matches the feature name pattern
    - Warn if on main/master branch (Ralph should work on feature branches)
 
-7. **Test script execution**
-   Check if `ralph.sh` is executable:
-   ```bash
-   test -x .ralph/{feature}/ralph.sh
-   ```
-   If not, offer to fix permissions: `chmod +x .ralph/{feature}/ralph.sh`
+6. **Check for orphaned files**
+   - Look for old `ralph.sh` or `claude.md` files (from old bash-based architecture)
+   - Offer to remove them
 
-8. **Report and offer fixes**
+7. **Report and offer fixes**
    Provide a clear report:
    ```
    🏥 Ralph Doctor Report: {feature}
 
    ✅ File structure: OK
-   ⚠️  ralph.sh: Outdated (missing location-agnostic code)
    ✅ prd.json: Valid (12 stories, 7 complete, 1 blocked, 4 pending)
    ⚠️  Git branch: Currently on 'main' (recommend feature branch)
-   ✅ Permissions: ralph.sh is executable
+   ⚠️  Orphaned files: claude.md, ralph.sh (old architecture)
 
    Issues Found:
-   1. ralph.sh is outdated - should support running from anywhere
-   2. Story FEAT-005 blocked: "Waiting for API keys"
-   3. Working on main branch - recommend: git checkout -b {feature}
+   1. Story FEAT-005 blocked: "Waiting for API keys"
+   2. Working on main branch - recommend: git checkout -b {feature}
+   3. Old architecture files present - can be removed
 
    Recommended Actions:
-   - Update ralph.sh to latest version
    - Resolve blocker for FEAT-005
    - Create feature branch
+   - Remove orphaned files
    ```
 
-9. **Auto-fix options**
+8. **Auto-fix options**
    Offer to automatically fix issues:
-   - Update ralph.sh to latest template
-   - Fix file permissions
    - Create proper feature branch and switch to it
+   - Remove orphaned files from old bash architecture
+   - Fix malformed prd.json (if possible)
 
    Ask user which fixes to apply, then execute them.
 
-10. **Summary**
+9. **Summary**
     End with next steps:
     - If healthy: "✅ Ralph project is healthy! Run /ralph-continue or /ralph-run to resume work."
     - If fixed: "✅ Issues fixed! Run /ralph-doctor again to verify, then /ralph-continue to resume."
@@ -106,11 +95,10 @@ Run a health check on a Ralph feature and fix common issues.
 Found feature: hypersketcher-mvp
 
 📋 Checking file structure...
-✅ claude.md exists
 ✅ plan.md exists
 ✅ prd.json exists
 ✅ progress.txt exists
-⚠️  ralph.sh exists but is outdated
+⚠️  Found orphaned files: claude.md, ralph.sh (old architecture)
 
 🔍 Analyzing prd.json...
 ✅ Valid JSON structure
@@ -120,18 +108,15 @@ Found feature: hypersketcher-mvp
 🔍 Checking git status...
 ⚠️  Currently on branch 'main' (recommend feature branch)
 
-🔍 Checking permissions...
-✅ ralph.sh is executable
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📊 SUMMARY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Issues found: 2
 
-1. ralph.sh is outdated
-   - Missing location-agnostic code
-   - Can't run from inside .ralph/hypersketcher-mvp/
+1. Old architecture files present
+   - claude.md (no longer used)
+   - ralph.sh (replaced by agent orchestration)
 
 2. Working on main branch
    - Ralph should work on feature branches
@@ -140,15 +125,26 @@ Issues found: 2
 Auto-fixable: Yes
 
 Would you like me to:
-1. Update ralph.sh to latest version
+1. Remove orphaned files (claude.md, ralph.sh)
 2. Create and switch to feature branch 'hypersketcher-mvp'
 
 Apply fixes? (yes/no)
 ```
 
+## Orphaned File Detection
+
+Ralph now uses agent orchestration (ralph-executor + ralph-story-worker). The old bash-based architecture used:
+- `claude.md` - Workflow instructions for bash loop
+- `ralph.sh` - Bash script
+
+These files are no longer needed and can be safely removed. The new architecture uses:
+- Agents defined in plugin (ralph-executor, ralph-story-worker)
+- Commands that spawn agents (/ralph-run, /ralph-continue)
+- State persisted in prd.json and progress.txt
+
 ## Notes
 
 - This command is safe to run anytime - it only reads and reports by default
-- Always ask before making changes (updating files, creating branches, etc.)
-- Keep a backup of ralph.sh before updating: `.ralph/{feature}/ralph.sh.bak`
+- Always ask before making changes (removing files, creating branches, etc.)
 - If user says yes to fixes, apply them and re-run the health check to confirm
+- The new agent-based architecture is simpler - no bash scripts needed

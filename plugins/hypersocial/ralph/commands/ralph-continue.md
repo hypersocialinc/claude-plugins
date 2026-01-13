@@ -1,225 +1,238 @@
 ---
 name: ralph-continue
-description: Continue Ralph feature - execute one story interactively
+description: Execute one Ralph story interactively
 ---
 
 # Ralph Continue
 
-Execute the Ralph workflow for one story cycle in the current session (not autonomous bash loop).
+Execute the next Ralph story interactively. This is the manual mode - complete one story, then stop.
+
+## What This Does
+
+This is equivalent to `/ralph-run 1` - it executes exactly ONE story, then stops.
+
+Use this when you want:
+- Manual control over each story
+- To validate the plan with first few stories
+- To review code after each story
+- Step-by-step progress instead of autonomous loop
 
 ## Process
 
 ### 1. Find Active Feature
 
-Look for `.ralph/` directory containing a feature folder.
+Look for `.ralph/` directory with a feature folder.
 
 If not found:
 ```
-No active Ralph feature found.
-Run /ralph-new <feature-name> to start one.
+❌ No active Ralph feature found.
+Run /ralph-new <feature-name> first.
 ```
 
-If found multiple (edge case):
+If multiple features found, list them and ask which to continue.
+
+### 2. Check Current State
+
+Read `.ralph/{feature}/prd.json` to show progress:
+
 ```
-Found multiple Ralph features:
-- feature-a
-- feature-b
+📊 Ralph Status: {feature}
 
-Which one to continue? (This shouldn't happen - only one should be active)
-```
+Total stories: {total}
+Completed: {completed} ✅
+In progress: {in_progress} 🔄
+Blocked: {blocked} ⚠️
+Pending: {pending} ⏳
 
-### 2. Read Context Files
-
-Read these files from `.ralph/<feature>/`:
-
-1. **progress.txt**:
-   - Read entire file
-   - Note Codebase Patterns section
-   - Check for incomplete story (STARTED without COMPLETED)
-   - Review recent work
-
-2. **prd.json**:
-   - Load all stories
-   - Check statuses and dependencies
-
-3. **claude.md**:
-   - Review workflow instructions
-   - Follow the process defined there
-
-### 3. Pick Next Story
-
-Follow the logic from claude.md:
-
-**Check for crash recovery first:**
-- Scan progress.txt for `STARTED: <id> at <timestamp>` without matching `COMPLETED: <id>`
-- If found → resume that story (crash recovery)
-
-**Otherwise pick next story:**
-- Filter: `status === "not_started"` or `status === "in_progress"`
-- Filter: All stories in `dependencies` array have `status === "completed"`
-- Sort by `priority` ascending
-- Pick first one
-
-**If all stories complete:**
-```
-✅ All stories complete!
-Feature: <name>
-Stories: <total> / <total>
-
-Run /ralph-done to archive and create PR.
+Next story: {story_id} - {title}
 ```
 
-**If no story available (all blocked):**
+### 3. Launch Executor for One Story
+
+Use the Task tool to spawn ralph-executor with max_iterations=1:
+
 ```
-⚠️  No stories available - all blocked
-
-Blocked stories:
-- <id>: <title> (waiting on <dependency-id>)
-- <id>: <title> (blocker: <reason>)
-
-Resolve blockers or run /ralph-abandon to give up.
-```
-
-### 4. Execute Story
-
-Show which story you're working on:
-```
-📝 Working on: <story-id>
-Title: <story-title>
-
-Steps:
-1. <step 1>
-2. <step 2>
-...
+Task(
+  subagent_type: "ralph-executor",
+  prompt: "Execute Ralph feature '{feature}' with max 1 iterations",
+  description: "Ralph continue: {feature}",
+  run_in_background: false
+)
 ```
 
-#### 4.1 Log Start
-Append to `.ralph/<feature>/progress.txt`:
-```
-STARTED: <story-id> at <ISO timestamp>
-```
+The executor will:
+1. Pick the next story (priority + dependencies)
+2. Spawn ralph-story-worker agent (fresh context)
+3. Wait for worker to complete the story
+4. Return result
 
-#### 4.2 Update Status
-In `.ralph/<feature>/prd.json`, update:
-```json
-{
-  "id": "<story-id>",
-  "status": "in_progress",
-  ...
-}
+### 4. Handle Result
+
+**STORY_COMPLETE:**
 ```
+✅ Story {story_id} Complete
 
-#### 4.3 Implement
-Follow the story's `steps` array. Implement the changes.
+Title: {title}
+Commit: {commit_hash}
+Patterns learned: {count}
 
-#### 4.4 Verify
-- Run typecheck (detect from package.json: `npm run typecheck`, `bun typecheck`, etc.)
-- Run tests if they exist
-- Verify all items in story's `passes` array
+Progress: {completed+1}/{total} stories
 
-#### 4.5 Review
-Launch review agents in parallel using Task tool:
-```
-Task tool (parallel):
-  1. subagent: code-reviewer
-  2. subagent: silent-failure-hunter
+Next story: {next_story_id} - {next_story_title}
+
+To continue: /ralph-continue
+To go autonomous: /ralph-run
+To check status: /ralph-status
 ```
 
-If issues found:
-- Fix them
-- Re-verify
-- Re-review
-- Repeat until clean
-
-#### 4.6 Commit Code
-```bash
-git add <files>
-git commit -m "feat(<story-id>): <story-title>
-
-<brief description>
-
-Co-Authored-By: Ralph <ralph@hypersocial.com>"
+**STORY_BLOCKED:**
 ```
+⚠️  Story {story_id} Blocked
 
-#### 4.7 Update Tracking
+Reason: {blocker_reason}
 
-**prd.json:**
-```json
-{
-  "id": "<story-id>",
-  "status": "completed",
-  ...
-}
-```
-
-**progress.txt:**
-Append:
-```
-=== <date> <time> ===
-COMPLETED: <story-id> at <ISO timestamp>
-Story: <story-id>
-Title: <story-title>
-Action: <what was implemented>
-Result: COMPLETED
-Commit: <commit-hash>
-Files: <files changed>
-Learnings:
-  - <pattern discovered>
-  - <gotcha>
-Next: <next-story-id or "All complete">
-
----
-```
-
-**If new pattern discovered:**
-Add to Codebase Patterns section at top of progress.txt
-
-**If permanent pattern:**
-Update project's `CLAUDE.md` with the pattern
-
-#### 4.8 Commit Tracking
-```bash
-git add .ralph/<feature>/
-git commit -m "ralph: complete <story-id>"
-```
-
-### 5. Output Next Steps
-
-**If more stories remain:**
-```
-✅ Story complete: <story-id>
-
-Progress: <completed> / <total> stories
-
-Next story: <next-id> - <next-title>
+This story cannot proceed until:
+{blocker details from progress.txt}
 
 Options:
-- /ralph-continue - Do next story now
-- /ralph-run - Start autonomous loop
-- /ralph-status - Check progress
+1. Resolve the blocker manually
+2. Update prd.json to skip this story
+3. Run /ralph-status for full context
 ```
 
-**If all complete:**
+**STORY_ERROR:**
 ```
-✅ All stories complete!
-Feature: <name>
-Stories: <total> / <total>
+❌ Story {story_id} Failed
 
-Run /ralph-done to archive and create PR.
+Error: {error_message}
+
+Check .ralph/{feature}/progress.txt for details.
+
+Options:
+1. Fix the error manually
+2. Run /ralph-doctor to diagnose
+3. Run /ralph-continue to retry
 ```
 
-## Error Handling
+**ALL_COMPLETE:**
+```
+✅ All Stories Complete!
 
-If implementation fails:
-- Don't mark story as completed
-- Log blocker in progress.txt
-- Update story status to `"blocked"`
-- Add blocker to story's `blockers` array
-- Show blocker to user
+Feature: {feature}
+Total stories: {total} ✅
+Total commits: {count}
+
+The feature is ready for review.
+
+Next steps:
+- Review commits: git log
+- Run tests: npm test
+- Create PR: /ralph-done
+```
+
+### 5. Guidance
+
+After each story, remind user of options:
+
+```
+What's next?
+
+- Continue: /ralph-continue (do next story)
+- Go autonomous: /ralph-run (finish all stories)
+- Check status: /ralph-status
+- Review work: git log
+- Test it: npm test
+- Done: /ralph-done (create PR)
+```
+
+## Example Workflow
+
+```
+# Start feature
+/ralph-new user-auth
+
+# Do first story manually
+/ralph-continue
+→ Story AUTH-001 complete
+
+# Do second story manually
+/ralph-continue
+→ Story AUTH-002 complete
+
+# Looks good, go autonomous
+/ralph-run
+→ Completes remaining 10 stories
+
+# Done
+/ralph-done
+```
+
+## Advantages
+
+✅ **Control** - Review after each story
+✅ **Learning** - Understand what Ralph does
+✅ **Validation** - Catch plan issues early
+✅ **Fresh context** - Each story gets clean slate
+✅ **Interruptible** - Stop anytime, resume later
+
+## When to Use This vs /ralph-run
+
+**Use /ralph-continue when:**
+- First time using Ralph on this project
+- Want to validate the plan before going autonomous
+- Complex/sensitive feature requiring oversight
+- Learning how Ralph works
+
+**Use /ralph-run when:**
+- Plan is validated (first 2-3 stories done via /ralph-continue)
+- Clear, well-defined stories
+- Want to walk away and let it work
+- Large feature with many stories
+
+## Fresh Context Per Story
+
+Each `/ralph-continue` spawns a NEW ralph-story-worker agent with fresh context via the Task tool.
+
+This means:
+- Worker doesn't know about previous stories (except via progress.txt patterns)
+- No context bloat across stories
+- Can run indefinitely without hitting limits
+- Same as /ralph-run, just one story at a time
+
+## Interactive Review
+
+After each story, you can:
+
+```bash
+# See what changed
+git diff HEAD~1
+
+# Review the commit
+git show HEAD
+
+# Check if it works
+npm run typecheck
+npm test
+
+# Read what was learned
+tail -20 .ralph/{feature}/progress.txt
+```
+
+Then decide: continue, go autonomous, or stop.
+
+## Error Recovery
+
+If a story fails:
+1. Read error from progress.txt
+2. Fix the issue manually
+3. Run /ralph-continue to retry
+   - Worker will pick up the same story (crash recovery)
+   - Fresh context, new attempt
 
 ## Important Notes
 
-- This is the interactive, one-story-at-a-time mode
-- Context stays in current session (no fresh context)
-- For autonomous mode, use /ralph-run instead
-- Always follow the workflow in claude.md
+- **One story at a time** - Executes exactly one, then stops
+- **Same architecture as /ralph-run** - Uses executor + worker agents
+- **Fresh context** - Each invocation spawns new agent
+- **Crash safe** - Re-running picks up where you left off
+- **Equivalent to `/ralph-run 1`** - Just a convenience command

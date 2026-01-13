@@ -42,7 +42,9 @@ Ralph automates feature development with story-based tracking, review gates, and
   ↓
 /ralph-run (autonomous) or /ralph-continue (manual)
   ↓
-[Loop: pick story → implement → review → commit → repeat]
+[Executor agent spawns story workers sequentially]
+  ↓
+[Each worker: implement → verify → review → commit]
   ↓
 /ralph-done
   ↓
@@ -56,13 +58,20 @@ Ralph creates `.ralph/<feature>/` in your project:
 ```
 .ralph/
 └── auth-system/
-    ├── claude.md       # Workflow instructions
     ├── plan.md         # Feature spec
     ├── prd.json        # Stories with status
     └── progress.txt    # Work log + patterns
 ```
 
 When complete, moves to `.ralph-archive/<feature>/`
+
+## Architecture
+
+Ralph uses **agent orchestration** (not bash scripts):
+- **/ralph-run** spawns **ralph-executor** agent
+- Executor spawns **ralph-story-worker** agents (one per story)
+- Each worker gets **fresh context** via Task tool
+- State persists in **prd.json** and **progress.txt**
 
 ## Usage Examples
 
@@ -88,9 +97,9 @@ When complete, moves to `.ralph-archive/<feature>/`
 /ralph-new payment-flow
 
 /ralph-run
-→ Choose: Let Claude run it in background
+→ Executor spawns workers sequentially
 
-... walk away, come back later ...
+... watch progress in Claude Code ...
 
 /ralph-status
 → "7/12 stories complete"
@@ -105,7 +114,7 @@ When complete, moves to `.ralph-archive/<feature>/`
 → Uses your spec instead of asking questions
 
 /ralph-run
-→ Cranks through it
+→ Executes all stories autonomously
 ```
 
 ## Key Features
@@ -160,9 +169,9 @@ Stories can depend on other stories. Ralph won't start a story until all its dep
 - Review the story's passes criteria (too vague?)
 - Manually fix the issue, update prd.json, continue
 
-**ralph.sh script errors:**
-- Run `/ralph-doctor` to update to latest version
-- Ensures script works from any directory
+**Agent errors:**
+- Run `/ralph-doctor` to check project health
+- Ensures prd.json and progress.txt are valid
 
 **Stories too big:**
 - Edit `prd.json` manually, break into smaller stories
@@ -215,4 +224,12 @@ Happy shipping! 🚀
 
 ## More Information
 
-For additional details, see the Ralph skill documentation by typing `/ralph` or checking `.ralph/<feature>/claude.md` in an active Ralph feature.
+For additional details, see the Ralph skill documentation by typing `/ralph`.
+
+## Architecture Notes
+
+Ralph uses **agent orchestration** instead of bash scripts:
+- Each story runs in a **fresh agent** with clean context
+- No context bloat across stories
+- Can run indefinitely without limits
+- Simpler, more reliable than bash loops
