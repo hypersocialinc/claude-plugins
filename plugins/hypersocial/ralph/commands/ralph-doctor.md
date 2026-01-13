@@ -83,8 +83,8 @@ Run a health check on a Ralph feature and fix common issues.
 
 9. **Summary**
     End with next steps:
-    - If healthy: "✅ Ralph project is healthy! Run /ralph-continue or /ralph-run to resume work."
-    - If fixed: "✅ Issues fixed! Run /ralph-doctor again to verify, then /ralph-continue to resume."
+    - If healthy: "✅ Ralph project is healthy! Run /ralph-next or /ralph-run to resume work."
+    - If fixed: "✅ Issues fixed! Run /ralph-doctor again to verify, then /ralph-next to resume."
     - If issues remain: "⚠️  Manual intervention needed. See report above."
 
 ## Example Output
@@ -139,7 +139,7 @@ Ralph now uses agent orchestration (ralph-executor + ralph-story-worker). The ol
 
 These files are no longer needed and can be safely removed. The new architecture uses:
 - Agents defined in plugin (ralph-executor, ralph-story-worker)
-- Commands that spawn agents (/ralph-run, /ralph-continue)
+- Commands that spawn agents (/ralph-run, /ralph-next)
 - State persisted in prd.json and progress.txt
 
 ## Notes

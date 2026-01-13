@@ -237,7 +237,7 @@ Files:
 - .ralph/<feature-name>/plan.md
 - .ralph/<feature-name>/prd.json
 
-Review the plan, then run /ralph-continue to start.
+Review the plan, then run /ralph-next to start.
 ```
 
 ## Important Guidelines

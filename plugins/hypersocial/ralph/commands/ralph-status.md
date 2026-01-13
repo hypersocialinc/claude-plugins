@@ -59,7 +59,7 @@ Last Activity:
 
 {{If incomplete story exists:}}
 ⚠️  Crash detected: Story <id> was started but not completed
-Run /ralph-continue to resume
+Run /ralph-next to resume
 
 {{If any blocked stories:}}
 Blocked Stories:
@@ -73,7 +73,7 @@ Run /ralph-done to archive and create PR.
 
 Next Actions:
 {{If not all complete:}}
-- /ralph-continue - Do next story interactively
+- /ralph-next - Do next story interactively
 - /ralph-run - Start autonomous loop
 - /ralph-abandon - Give up on this feature
 
@@ -121,7 +121,7 @@ Blocked Stories:
   Dependencies: AUTH-010
 
 Next Actions:
-- /ralph-continue - Do next story (AUTH-008)
+- /ralph-next - Do next story (AUTH-008)
 - /ralph-run - Start autonomous loop
 - /ralph-abandon - Give up on this feature
 ```
@@ -146,4 +146,4 @@ Try:
 - This is read-only - doesn't modify any files
 - Fast check without executing work
 - Good for monitoring autonomous loops
-- Shows what /ralph-continue would do next
+- Shows what /ralph-next would do next

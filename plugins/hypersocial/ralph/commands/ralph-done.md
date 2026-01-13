@@ -39,7 +39,7 @@ Incomplete stories:
 - <id>: <title> (status: <status>)
 
 Options:
-1. Complete remaining stories with /ralph-continue
+1. Complete remaining stories with /ralph-next
 2. Mark feature done anyway (incomplete)
 3. Abandon with /ralph-abandon
 ```

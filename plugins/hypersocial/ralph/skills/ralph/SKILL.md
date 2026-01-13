@@ -25,7 +25,7 @@ Ralph automates the tedious parts of feature development:
   ↓
 [Planning: asks questions, generates stories]
   ↓
-/ralph-run (autonomous) or /ralph-continue (manual)
+/ralph-run (autonomous) or /ralph-next (manual)
   ↓
 [Loop: pick story → implement → review → commit → repeat]
   ↓
@@ -39,7 +39,7 @@ Ralph automates the tedious parts of feature development:
 | Command | Description |
 |---------|-------------|
 | `/ralph-new <name>` | Start new feature, create plan + stories |
-| `/ralph-continue` | Execute one story interactively |
+| `/ralph-next` | Execute one story interactively |
 | `/ralph-run` | Start autonomous loop (bash) |
 | `/ralph-status` | Check progress without doing work |
 | `/ralph-done` | Complete feature, archive, create PR |
@@ -69,10 +69,10 @@ When complete, moves to `.ralph-archive/<feature>/`
 /ralph-new user-dashboard
 → Answers questions, creates plan
 
-/ralph-continue
+/ralph-next
 → Does story AUTH-001
 
-/ralph-continue
+/ralph-next
 → Does story AUTH-002
 
 ... repeat until done ...
@@ -219,7 +219,7 @@ Loop continues until:
 1. **Start small** - Try a 3-story feature first to learn the workflow
 2. **Good passes criteria** - Be specific: "Button shows modal" not "Button works"
 3. **Right-sized stories** - 15-45 minutes each, not 5 min or 2 hours
-4. **Watch the first few** - Run `/ralph-continue` manually for first 2-3 stories to validate the plan
+4. **Watch the first few** - Run `/ralph-next` manually for first 2-3 stories to validate the plan
 5. **Review the PRD** - After `/ralph-new`, check `prd.json` before starting the loop
 
 ## Troubleshooting

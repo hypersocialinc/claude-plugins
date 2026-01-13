@@ -19,7 +19,7 @@ Execute stories one at a time until the feature is complete or blocked:
 
 You will receive:
 - Feature name (e.g., "user-authentication")
-- Max iterations (default: 20, or 1 for /ralph-continue)
+- Max iterations (default: 20, or 1 for /ralph-next)
 
 ## Workflow
 
@@ -234,6 +234,6 @@ Your final output must contain ONE of these signals for the command to parse:
 ## Integration with Commands
 
 **/ralph-run:** Calls you with max_iterations=20 (or user-specified)
-**/ralph-continue:** Calls you with max_iterations=1 (do one story, then stop)
+**/ralph-next:** Calls you with max_iterations=1 (do one story, then stop)
 
 Both commands will parse your output signals to give user feedback.

@@ -26,7 +26,7 @@ Ralph automates feature development with story-based tracking, review gates, and
 |---------|-------------|
 | `/ralph-help` | Show this help (you are here) |
 | `/ralph-new <name>` | Start new feature, create plan + stories |
-| `/ralph-continue` | Execute one story interactively |
+| `/ralph-next` | Execute one story interactively |
 | `/ralph-run` | Start autonomous loop (bash) |
 | `/ralph-status` | Check progress without doing work |
 | `/ralph-doctor` | Health check and repair Ralph projects |
@@ -40,7 +40,7 @@ Ralph automates feature development with story-based tracking, review gates, and
   ↓
 [Planning: asks questions, generates stories]
   ↓
-/ralph-run (autonomous) or /ralph-continue (manual)
+/ralph-run (autonomous) or /ralph-next (manual)
   ↓
 [Executor agent spawns story workers sequentially]
   ↓
@@ -80,10 +80,10 @@ Ralph uses **agent orchestration** (not bash scripts):
 /ralph-new user-dashboard
 → Answer questions, review plan
 
-/ralph-continue
+/ralph-next
 → Does story AUTH-001
 
-/ralph-continue
+/ralph-next
 → Does story AUTH-002
 
 ... repeat until done ...
@@ -154,7 +154,7 @@ Stories can depend on other stories. Ralph won't start a story until all its dep
 1. **Start small** - Try a 3-story feature first to learn the workflow
 2. **Good passes criteria** - Be specific: "Button shows modal" not "Button works"
 3. **Right-sized stories** - 15-45 minutes each, not 5 min or 2 hours
-4. **Watch the first few** - Run `/ralph-continue` manually for first 2-3 stories to validate the plan
+4. **Watch the first few** - Run `/ralph-next` manually for first 2-3 stories to validate the plan
 5. **Review the PRD** - After `/ralph-new`, check `prd.json` before starting the loop
 6. **Health checks** - Run `/ralph-doctor` if something seems off or scripts aren't working
 

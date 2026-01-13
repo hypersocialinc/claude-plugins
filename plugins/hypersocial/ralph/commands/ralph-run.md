@@ -168,7 +168,7 @@ Troubleshooting:
 # Custom limit
 /ralph-run 50
 
-# Do just one story (same as /ralph-continue)
+# Do just one story (same as /ralph-next)
 /ralph-run 1
 ```
 

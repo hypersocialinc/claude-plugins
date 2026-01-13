@@ -157,7 +157,7 @@ Next steps:
    ./.ralph/<feature-name>/ralph.sh 20
 
    Option C: One story at a time
-   /ralph-continue
+   /ralph-next
 
 Happy shipping! 🚀
 ```

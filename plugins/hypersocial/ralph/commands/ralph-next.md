@@ -1,9 +1,9 @@
 ---
-name: ralph-continue
+name: ralph-next
 description: Execute one Ralph story interactively
 ---
 
-# Ralph Continue
+# Ralph Next
 
 Execute the next Ralph story interactively. This is the manual mode - complete one story, then stop.
 
@@ -80,7 +80,7 @@ Progress: {completed+1}/{total} stories
 
 Next story: {next_story_id} - {next_story_title}
 
-To continue: /ralph-continue
+To continue: /ralph-next
 To go autonomous: /ralph-run
 To check status: /ralph-status
 ```
@@ -111,7 +111,7 @@ Check .ralph/{feature}/progress.txt for details.
 Options:
 1. Fix the error manually
 2. Run /ralph-doctor to diagnose
-3. Run /ralph-continue to retry
+3. Run /ralph-next to retry
 ```
 
 **ALL_COMPLETE:**
@@ -137,7 +137,7 @@ After each story, remind user of options:
 ```
 What's next?
 
-- Continue: /ralph-continue (do next story)
+- Continue: /ralph-next (do next story)
 - Go autonomous: /ralph-run (finish all stories)
 - Check status: /ralph-status
 - Review work: git log
@@ -152,11 +152,11 @@ What's next?
 /ralph-new user-auth
 
 # Do first story manually
-/ralph-continue
+/ralph-next
 → Story AUTH-001 complete
 
 # Do second story manually
-/ralph-continue
+/ralph-next
 → Story AUTH-002 complete
 
 # Looks good, go autonomous
@@ -177,21 +177,21 @@ What's next?
 
 ## When to Use This vs /ralph-run
 
-**Use /ralph-continue when:**
+**Use /ralph-next when:**
 - First time using Ralph on this project
 - Want to validate the plan before going autonomous
 - Complex/sensitive feature requiring oversight
 - Learning how Ralph works
 
 **Use /ralph-run when:**
-- Plan is validated (first 2-3 stories done via /ralph-continue)
+- Plan is validated (first 2-3 stories done via /ralph-next)
 - Clear, well-defined stories
 - Want to walk away and let it work
 - Large feature with many stories
 
 ## Fresh Context Per Story
 
-Each `/ralph-continue` spawns a NEW ralph-story-worker agent with fresh context via the Task tool.
+Each `/ralph-next` spawns a NEW ralph-story-worker agent with fresh context via the Task tool.
 
 This means:
 - Worker doesn't know about previous stories (except via progress.txt patterns)
@@ -225,7 +225,7 @@ Then decide: continue, go autonomous, or stop.
 If a story fails:
 1. Read error from progress.txt
 2. Fix the issue manually
-3. Run /ralph-continue to retry
+3. Run /ralph-next to retry
    - Worker will pick up the same story (crash recovery)
    - Fresh context, new attempt
 
