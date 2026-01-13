@@ -53,7 +53,7 @@ Use the Task tool to spawn ralph-executor with max_iterations=1:
 
 ```
 Task(
-  subagent_type: "ralph-executor",
+  subagent_type: "ralph:ralph-executor",
   prompt: "Execute Ralph feature '{feature}' with max 1 iterations",
   description: "Ralph continue: {feature}",
   run_in_background: false

@@ -64,7 +64,7 @@ for iteration in 1..max_iterations:
 
   # Spawn worker with fresh context
   result = Task(
-    subagent_type: "ralph-story-worker",
+    subagent_type: "ralph:ralph-story-worker",
     prompt: "Execute story {next_story.id} for feature {feature}",
     description: "Story {next_story.id}: {next_story.title}"
   )

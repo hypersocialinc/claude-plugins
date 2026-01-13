@@ -105,8 +105,8 @@ If any fail:
 Run BOTH review agents in parallel using Task tool:
 
 ```
-Task(code-reviewer) - Check for bugs, logic errors, style issues
-Task(silent-failure-hunter) - Check for error handling issues
+Task(pr-review-toolkit:code-reviewer) - Check for bugs, logic errors, style issues
+Task(pr-review-toolkit:silent-failure-hunter) - Check for error handling issues
 ```
 
 **Review Loop:**

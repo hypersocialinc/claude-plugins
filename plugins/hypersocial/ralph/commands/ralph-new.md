@@ -83,7 +83,7 @@ Use the Task tool to launch the `ralph-planner` agent:
 
 ```
 Task tool:
-  subagent_type: ralph-planner
+  subagent_type: "ralph:ralph-planner"
   description: Plan feature and create stories
   prompt: |
     Feature name: <feature-name>

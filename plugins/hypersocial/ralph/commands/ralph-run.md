@@ -65,7 +65,7 @@ Use the Task tool to spawn the ralph-executor agent:
 
 ```
 Task(
-  subagent_type: "ralph-executor",
+  subagent_type: "ralph:ralph-executor",
   prompt: "Execute Ralph feature '{feature}' with max {max_iterations} iterations",
   description: "Ralph autonomous loop: {feature}",
   run_in_background: false  // Run in foreground so user sees progress
