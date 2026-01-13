@@ -29,6 +29,7 @@ Ralph automates feature development with story-based tracking, review gates, and
 | `/ralph-continue` | Execute one story interactively |
 | `/ralph-run` | Start autonomous loop (bash) |
 | `/ralph-status` | Check progress without doing work |
+| `/ralph-doctor` | Health check and repair Ralph projects |
 | `/ralph-done` | Complete feature, archive, create PR |
 | `/ralph-abandon` | Give up and clean up |
 
@@ -146,13 +147,22 @@ Stories can depend on other stories. Ralph won't start a story until all its dep
 3. **Right-sized stories** - 15-45 minutes each, not 5 min or 2 hours
 4. **Watch the first few** - Run `/ralph-continue` manually for first 2-3 stories to validate the plan
 5. **Review the PRD** - After `/ralph-new`, check `prd.json` before starting the loop
+6. **Health checks** - Run `/ralph-doctor` if something seems off or scripts aren't working
 
 ## Troubleshooting
+
+**Something feels broken:**
+- Run `/ralph-doctor` to check project health
+- It will identify and fix common issues automatically
 
 **Ralph gets stuck on a story:**
 - Check `/ralph-status` for blockers
 - Review the story's passes criteria (too vague?)
 - Manually fix the issue, update prd.json, continue
+
+**ralph.sh script errors:**
+- Run `/ralph-doctor` to update to latest version
+- Ensures script works from any directory
 
 **Stories too big:**
 - Edit `prd.json` manually, break into smaller stories
