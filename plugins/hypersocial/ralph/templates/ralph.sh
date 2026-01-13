@@ -3,13 +3,28 @@ set -e
 
 # Ralph autonomous loop
 # Usage: ./ralph.sh [max_iterations]
+# Can be run from project root OR from inside .ralph/feature-name/
 
 MAX_ITERATIONS=${1:-20}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FEATURE_DIR="$(dirname "$SCRIPT_DIR")"
+FEATURE_NAME="$(basename "$(dirname "$SCRIPT_DIR")")"
+
+# Find project root (go up until we find .git or top-level .ralph)
+PROJECT_ROOT="$SCRIPT_DIR"
+while [[ "$PROJECT_ROOT" != "/" ]]; do
+  # Check if we're at project root
+  if [[ -d "$PROJECT_ROOT/.git" ]] || [[ -d "$PROJECT_ROOT/.ralph" && "$(basename "$PROJECT_ROOT")" != ".ralph" ]]; then
+    break
+  fi
+  PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+done
+
+# Navigate to project root
+cd "$PROJECT_ROOT"
 
 echo "🚀 Starting Ralph autonomous loop"
-echo "Feature: $(basename "$FEATURE_DIR")"
+echo "Feature: $FEATURE_NAME"
+echo "Project root: $PROJECT_ROOT"
 echo "Max iterations: $MAX_ITERATIONS"
 echo ""
 
@@ -19,7 +34,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "═══════════════════════════════════════"
   echo ""
 
-  # Run Claude with the workflow instructions
+  # Run Claude from project root with the workflow instructions
   OUTPUT=$(claude --dangerously-skip-permissions -p "$(cat "$SCRIPT_DIR/claude.md")" 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
