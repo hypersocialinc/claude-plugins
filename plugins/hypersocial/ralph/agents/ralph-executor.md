@@ -52,6 +52,8 @@ Check progress.txt for crash recovery:
 
 Use TodoWrite to track story execution as you work through them.
 
+**IMPORTANT: Output progress text between each story** so the user can see what's happening.
+
 ```
 for iteration in 1..max_iterations:
 
@@ -62,6 +64,19 @@ for iteration in 1..max_iterations:
     output "RALPH_COMPLETE: All stories done!"
     break
 
+  # OUTPUT PROGRESS (user sees this immediately)
+  output "\n🎯 Story {iteration}/{total}: {next_story.id} - {next_story.title}"
+  output "Starting implementation...\n"
+
+  # Update TodoWrite so user sees active story
+  TodoWrite([
+    {
+      content: "Story {next_story.id}: {next_story.title}",
+      status: "in_progress",
+      activeForm: "Working on {next_story.id}"
+    }
+  ])
+
   # Spawn worker with fresh context
   result = Task(
     subagent_type: "ralph:ralph-story-worker",
@@ -69,15 +84,34 @@ for iteration in 1..max_iterations:
     description: "Story {next_story.id}: {next_story.title}"
   )
 
-  # Handle result
+  # Handle result and OUTPUT STATUS (user sees this after worker completes)
   if result contains "STORY_COMPLETE":
+    output "\n✅ Story {next_story.id} Complete!"
+    output "Commit: {extract commit hash from result}"
+    output "Progress: {completed}/{total} stories\n"
+
+    # Update TodoWrite
+    TodoWrite([
+      {
+        content: "Story {next_story.id}: {next_story.title}",
+        status: "completed",
+        activeForm: "Completed {next_story.id}"
+      }
+    ])
+
+    # Brief pause so user can see progress
+    sleep 2 seconds
     continue to next iteration
 
   if result contains "STORY_BLOCKED":
+    output "\n⚠️  Story {next_story.id} Blocked"
+    output "Reason: {extract reason from result}\n"
     output "RALPH_BLOCKED: {reason}"
     exit
 
   if result contains "STORY_ERROR":
+    output "\n❌ Story {next_story.id} Failed"
+    output "Error: {extract error from result}\n"
     output "RALPH_ERROR: {error}"
     exit
 ```

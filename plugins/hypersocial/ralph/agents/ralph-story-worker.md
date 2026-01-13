@@ -63,17 +63,24 @@ If dependencies incomplete:
 
 ### Phase 3: Log Start
 
-Append to `.ralph/{feature}/progress.txt`:
+**IMPORTANT: Prepend to the TOP of progress.txt** (reverse chronological - latest first):
+
+1. Read current progress.txt content
+2. Prepend new entry + existing content
+3. Write back to file
+
 ```
 STARTED: {story_id} - {title}
   Timestamp: {ISO timestamp}
+
+[... existing progress.txt content below ...]
 ```
 
 Update prd.json: set status to "in_progress"
 
 ### Phase 4: Read Context
 
-Read recent patterns from last 30 lines of progress.txt to learn from previous work.
+Read recent patterns from **top 30 lines** of progress.txt to learn from previous work (latest entries are at top).
 
 ### Phase 5: Implement Steps
 
@@ -147,15 +154,23 @@ Use git add + git commit in a single Bash call.
 
 ### Phase 9: Update Progress
 
-Append to progress.txt:
+**IMPORTANT: Prepend to the TOP of progress.txt** (reverse chronological - latest first):
+
+1. Read current progress.txt content
+2. Prepend completion entry + existing content
+3. Write back to file
+
 ```
 COMPLETED: {story_id} - {title}
   Timestamp: {ISO timestamp}
   Commit: {commit hash}
+  Files: {list of files modified/created}
   Patterns learned:
     - [Any new patterns discovered]
     - [Codebase conventions observed]
     - [Lessons for future stories]
+
+[... existing progress.txt content below ...]
 ```
 
 ### Phase 10: Update PRD
@@ -178,12 +193,14 @@ Patterns: {count of new patterns learned}
 
 **If you encounter an error:**
 
-1. Log to progress.txt:
+1. **Prepend** error to top of progress.txt (read, prepend, write back):
 ```
 ERROR: {story_id}
   Timestamp: {ISO timestamp}
   Error: {description}
   Context: {what you were trying to do}
+
+[... existing progress.txt content below ...]
 ```
 
 2. Update prd.json:
