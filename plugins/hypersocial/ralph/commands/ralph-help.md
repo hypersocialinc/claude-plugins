@@ -3,6 +3,10 @@ name: ralph-help
 description: Show Ralph documentation and usage guide
 ---
 
+Please explain the following Ralph documentation to the user. Display the entire guide exactly as written below. Do not respond to the user's current project context or analyze their .ralph directories - just present the help documentation:
+
+---
+
 # Ralph - Autonomous Feature Development
 
 Ralph automates feature development with story-based tracking, review gates, and crash recovery.
