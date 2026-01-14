@@ -11,10 +11,38 @@ examples:
     description: Extract Stripe subscription implementation patterns
 ---
 
-Immediately use the Task tool to invoke the pattern-extractor:extract-pattern agent with the user's request.
+# Extract Pattern Command
 
-Task(
-  subagent_type: "pattern-extractor:extract-pattern",
-  prompt: "{{user_message}}",
+Extract implementation patterns from GitHub repositories using the pattern-extractor agent.
+
+## Process
+
+### 1. Invoke the Pattern Extractor Agent
+
+Use the Task tool to spawn the extract-pattern agent:
+
+```
+Task tool parameters:
+  subagent_type: "pattern-extractor:extract-pattern"
   description: "Extract pattern from GitHub"
-)
+  prompt: "{{user_message}}"
+```
+
+### 2. Wait for Results
+
+The agent will:
+- Search GitHub repos for the requested pattern
+- Extract key code snippets with file paths
+- Explain the implementation approach
+- Include relevant external documentation
+
+### 3. Return Findings
+
+After the agent completes, present the structured findings to the user.
+
+## Error Handling
+
+If the agent fails or returns no results:
+- Verify `gh` CLI is installed: `gh --version`
+- Check GitHub authentication: `gh auth status`
+- Try a more specific search term

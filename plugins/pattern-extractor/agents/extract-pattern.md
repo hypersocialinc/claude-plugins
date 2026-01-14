@@ -1,11 +1,6 @@
 ---
 name: extract-pattern
-description: |
-  Extract implementation patterns from GitHub repositories. Search repos, analyze code, and return structured implementation summaries.
-  <example>User asks "how did we implement clerk authentication"</example>
-  <example>User asks "find stripe subscription patterns in our repos"</example>
-  <example>User asks "extract convex file upload examples"</example>
-  <example>User asks "compare database migration approaches across projects"</example>
+description: Extract implementation patterns from GitHub repositories. Search repos, analyze code, and return structured implementation summaries.
 tools: Bash, Read, Glob, Grep, WebFetch, WebSearch
 model: sonnet
 color: purple
