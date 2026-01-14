@@ -5,13 +5,36 @@
 #
 # This script runs Ralph autonomously until all stories are complete.
 # It calls `/ralph-next` repeatedly, checking for completion signals.
+#
+# Usage:
+#   ./ralph-go.sh           # Run with defaults (100 iterations, autonomous)
+#   ./ralph-go.sh 50        # Run 50 iterations max (autonomous)
+#   ./ralph-go.sh 50 --hit  # Run 50 iterations with human-in-the-loop
+#   ./ralph-go.sh --hit     # Run with human-in-the-loop, default iterations
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FEATURE_NAME="{{FEATURE_NAME}}"
-MAX_ITERATIONS=${1:-100}
+
+# Parse arguments
+MAX_ITERATIONS=100
+HUMAN_IN_LOOP=false
+
+# Process all arguments
+for arg in "$@"; do
+  case $arg in
+    --hit|--human-in-loop)
+      HUMAN_IN_LOOP=true
+      shift || true
+      ;;
+    [0-9]*)
+      MAX_ITERATIONS=$arg
+      shift || true
+      ;;
+  esac
+done
 
 cd "$PROJECT_ROOT"
 
@@ -26,9 +49,23 @@ if ! command -v claude &> /dev/null; then
   exit 1
 fi
 
+# Show configuration
 echo "🚀 Ralph Go: $FEATURE_NAME"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Max iterations: $MAX_ITERATIONS"
 echo "Working directory: $PROJECT_ROOT"
+if [ "$HUMAN_IN_LOOP" = true ]; then
+  echo "Mode: Human-in-the-loop (permission prompts enabled)"
+  echo ""
+  echo "⚠️  You will be prompted to approve each tool use."
+  echo "    This is useful for reviewing each story as it's completed."
+else
+  echo "Mode: Autonomous (no permission prompts)"
+  echo ""
+  echo "🤖 Ralph will run autonomously without prompts."
+  echo "    You can walk away and come back to completed work."
+fi
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 # Main execution loop
@@ -39,10 +76,17 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo ""
 
   # Run one story via /ralph-next
-  # Capture both output and exit code
+  # Use --dangerously-skip-permissions for true autonomous mode
   set +e
-  OUTPUT=$(claude /ralph-next 2>&1)
-  EXIT_CODE=$?
+  if [ "$HUMAN_IN_LOOP" = true ]; then
+    # With permission prompts (human reviews each action)
+    OUTPUT=$(claude /ralph-next 2>&1)
+    EXIT_CODE=$?
+  else
+    # Autonomous mode (no prompts - walk away and come back)
+    OUTPUT=$(claude --dangerously-skip-permissions /ralph-next 2>&1)
+    EXIT_CODE=$?
+  fi
   set -e
 
   echo "$OUTPUT"
@@ -137,5 +181,8 @@ echo "  ./ralph-go.sh $MAX_ITERATIONS"
 echo ""
 echo "Or increase limit:"
 echo "  ./ralph-go.sh 200"
+echo ""
+echo "Or run with human-in-the-loop:"
+echo "  ./ralph-go.sh 50 --hit"
 echo ""
 exit 0
