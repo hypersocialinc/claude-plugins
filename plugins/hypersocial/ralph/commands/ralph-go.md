@@ -70,8 +70,8 @@ Runs .ralph/{feature}/ralph-go.sh in terminal
 ✓ Works outside Claude Code
 ✓ Integrate with automation/CI
 
-Default: 100 iterations max
-Override: ./ralph-go.sh 20
+Default: 20 iterations max
+Override: ./ralph-go.sh 50
 ```
 
 **Option 2: Autonomous (Current Session)**

@@ -89,18 +89,29 @@ Ralph can run from terminal using the generated script:
 # Navigate to feature directory
 cd .ralph/my-feature
 
-# Run until complete (default: 100 iterations max)
-./ralph-go.sh
+# AUTONOMOUS MODE (Default - Walk Away and Come Back!)
+# Runs without permission prompts - true autonomous execution
+./ralph-go.sh              # 20 iterations, no prompts (default)
+./ralph-go.sh 50           # 50 iterations, no prompts
 
-# Custom max iterations
-./ralph-go.sh 20
+# HUMAN-IN-THE-LOOP MODE (Optional Review Mode)
+# Prompts for permission before each tool use
+./ralph-go.sh --hit        # 20 iterations, with prompts (default)
+./ralph-go.sh 50 --hit     # 50 iterations, with prompts
 
-# Background execution
+# Background execution (autonomous mode recommended)
 ./ralph-go.sh &
 
 # With output logging
 ./ralph-go.sh > ralph.log 2>&1 &
 ```
+
+**Key Point:** By default, the script runs **fully autonomously** without permission prompts. This means you can:
+- 🚀 Start the script
+- 🚶 Walk away (go to sleep, run errands, etc.)
+- ✅ Come back to completed, tested work
+
+Use `--hit` (human-in-the-loop) only if you want to review each action as it happens.
 
 Or use the command for interactive choice:
 ```

@@ -7,7 +7,7 @@
 # It calls `/ralph-next` repeatedly, checking for completion signals.
 #
 # Usage:
-#   ./ralph-go.sh           # Run with defaults (100 iterations, autonomous)
+#   ./ralph-go.sh           # Run with defaults (20 iterations, autonomous)
 #   ./ralph-go.sh 50        # Run 50 iterations max (autonomous)
 #   ./ralph-go.sh 50 --hit  # Run 50 iterations with human-in-the-loop
 #   ./ralph-go.sh --hit     # Run with human-in-the-loop, default iterations
@@ -19,7 +19,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FEATURE_NAME="{{FEATURE_NAME}}"
 
 # Parse arguments
-MAX_ITERATIONS=100
+MAX_ITERATIONS=20
 HUMAN_IN_LOOP=false
 
 # Process all arguments
