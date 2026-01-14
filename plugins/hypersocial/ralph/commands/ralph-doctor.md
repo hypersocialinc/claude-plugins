@@ -1,9 +1,8 @@
 ---
 name: ralph-doctor
 description: Check and repair Ralph project health
-args:
-  feature:
-    type: string
+arguments:
+  - name: feature
     description: Feature name to check (optional, defaults to current)
     required: false
 ---

@@ -5,5 +5,14 @@
   "author": {
     "name": "HyperSocial",
     "url": "https://github.com/hypersocialinc"
+  },
+  "dependencies": {
+    "recommended": [
+      {
+        "name": "pr-review-toolkit",
+        "marketplace": "claude-code-plugins",
+        "reason": "Review gates use pr-review-toolkit:code-reviewer and pr-review-toolkit:silent-failure-hunter agents"
+      }
+    ]
   }
 }

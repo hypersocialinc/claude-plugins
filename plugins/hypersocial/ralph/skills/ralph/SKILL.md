@@ -135,6 +135,8 @@ Before every commit:
 - If issues found → fix → re-review → repeat
 - Only commits when clean
 
+> **Note:** Review gates require the `pr-review-toolkit` plugin from the claude-code-plugins marketplace. Install it for full functionality.
+
 ### Story Dependencies
 
 Stories can depend on other stories:
