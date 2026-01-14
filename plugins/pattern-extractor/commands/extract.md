@@ -11,13 +11,16 @@ examples:
     description: Extract Stripe subscription implementation patterns
 ---
 
-I'll use the extract-pattern agent to search for the requested implementation pattern across GitHub repositories.
+Use the Task tool to invoke the extract-pattern agent and search for the requested pattern.
 
-The agent will:
-1. Search relevant repositories for the pattern
-2. Extract key code snippets with file paths
-3. Explain the implementation approach
-4. Include relevant external documentation
-5. Provide recommendations and gotchas
+**Task Configuration:**
+- subagent_type: `extract-pattern`
+- description: "Extract pattern"
+- prompt: "{{user_message}}"
 
-Invoking extract-pattern agent to find: {{user_message}}
+The agent will search GitHub repositories and return:
+- Repos containing the pattern
+- Key code snippets with file paths
+- Implementation approach
+- External documentation
+- Recommendations
