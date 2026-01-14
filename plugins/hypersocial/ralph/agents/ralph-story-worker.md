@@ -2,7 +2,8 @@
 name: ralph-story-worker
 description: Execute a single Ralph story with fresh context
 color: blue
-tools: [Bash, Read, Write, Edit, Glob, Grep, Task, TodoWrite]
+tools: Bash, Read, Write, Edit, Glob, Grep, Task, TodoWrite
+model: opus
 ---
 
 You are a Ralph story worker agent. Your job is to implement a SINGLE story from start to finish with fresh context.
