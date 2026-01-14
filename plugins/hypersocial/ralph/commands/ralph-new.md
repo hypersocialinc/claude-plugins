@@ -70,6 +70,28 @@ Replace template variables:
 - `{{DATE}}` → current date (YYYY-MM-DD)
 - `{{STORY_COUNT}}` → 0 (will be filled by planner)
 
+### 5b. Generate ralph-go.sh Script
+
+Create the terminal execution script:
+
+```bash
+cp ${CLAUDE_PLUGIN_ROOT}/templates/ralph-go.sh .ralph/<feature-name>/ralph-go.sh
+```
+
+Replace template variables:
+- `{{FEATURE_NAME}}` → feature name (kebab-case)
+- `{{DATE}}` → current ISO timestamp (YYYY-MM-DDTHH:MM:SSZ)
+
+Make executable:
+```bash
+chmod +x .ralph/<feature-name>/ralph-go.sh
+```
+
+This script enables terminal-based autonomous execution:
+- Loops calling `/ralph-next` until complete
+- Exit codes for scripting/CI
+- Can be backgrounded or redirected
+
 ### 6. Handle Existing Spec (if --from flag)
 
 If user provided `--from <file>`:
@@ -127,11 +149,19 @@ Ready to start.
 
 ### 9. Initial Commit
 
+Add all Ralph files including the generated script:
+
 ```bash
 git add .ralph/<feature-name>
 git commit -m "ralph: init <feature-name>
 
 <summary from plan.md>
+
+Files:
+- plan.md: Feature specification
+- prd.json: <count> stories
+- progress.txt: Work log
+- ralph-go.sh: Terminal execution script
 
 Co-Authored-By: Ralph <ralph@hypersocial.com>"
 ```
@@ -141,23 +171,35 @@ Co-Authored-By: Ralph <ralph@hypersocial.com>"
 ```
 ✅ Ralph feature initialized: <feature-name>
 
+Files created:
+- .ralph/<feature-name>/plan.md          # Feature specification
+- .ralph/<feature-name>/prd.json         # Story definitions
+- .ralph/<feature-name>/progress.txt     # Work log
+- .ralph/<feature-name>/ralph-go.sh      # Terminal script ⭐
+
 Branch: ralph/<feature-name>
 Stories: <count>
 
 Next steps:
-1. Review the plan: .ralph/<feature-name>/plan.md
-2. Review stories: .ralph/<feature-name>/prd.json
-3. Start autonomous loop:
 
-   Option A: Let Claude run it
-   /ralph-run
+1. Review the plan:
+   cat .ralph/<feature-name>/plan.md
 
-   Option B: Run manually in terminal
-   cd <project-path>
-   ./.ralph/<feature-name>/ralph.sh 20
+2. Start development:
 
-   Option C: One story at a time
+   Option A: Terminal Script (Recommended for CI/CD)
+   cd .ralph/<feature-name>
+   ./ralph-go.sh
+
+   Option B: Autonomous in Claude Code (Recommended for interactive)
+   /ralph-go
+   → Choose "Autonomous" when prompted
+
+   Option C: One story at a time (Recommended for learning)
    /ralph-next
+
+3. When complete:
+   /ralph-done
 
 Happy shipping! 🚀
 ```
@@ -171,6 +213,7 @@ Happy shipping! 🚀
 
 ## Important Notes
 
-- Don't start the loop automatically - let user choose
-- Make sure ralph.sh is executable
+- Don't start the loop automatically - let user choose their mode
+- Make sure ralph-go.sh is executable (chmod +x)
+- Include ralph-go.sh in the initial commit
 - Commit before suggesting next steps

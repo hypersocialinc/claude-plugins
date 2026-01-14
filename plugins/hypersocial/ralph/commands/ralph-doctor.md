@@ -23,8 +23,15 @@ Run a health check on a Ralph feature and fix common issues.
    - `.ralph/{feature}/plan.md` - Feature specification
    - `.ralph/{feature}/prd.json` - Stories with status
    - `.ralph/{feature}/progress.txt` - Work log
+   - `.ralph/{feature}/ralph-go.sh` - Terminal execution script
 
    Note: `claude.md` is no longer used (agent-based architecture).
+
+   If `ralph-go.sh` is missing:
+   - Offer to generate it from template
+   - Copy from `${CLAUDE_PLUGIN_ROOT}/templates/ralph-go.sh`
+   - Replace template variables ({{FEATURE_NAME}}, {{DATE}})
+   - Make executable with `chmod +x`
 
    Report any missing files.
 

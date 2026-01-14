@@ -26,12 +26,15 @@ Ralph automates feature development with story-based tracking, review gates, and
 |---------|-------------|
 | `/ralph-help` | Show this help (you are here) |
 | `/ralph-new <name>` | Start new feature, create plan + stories |
+| `/ralph-go` | Start autonomous loop (choose script or interactive) |
 | `/ralph-next` | Execute one story interactively |
-| `/ralph-run` | Start autonomous loop (bash) |
 | `/ralph-status` | Check progress without doing work |
 | `/ralph-doctor` | Health check and repair Ralph projects |
 | `/ralph-done` | Complete feature, archive, create PR |
 | `/ralph-abandon` | Give up and clean up |
+| `/ralph-board` | Open visual dashboard |
+
+**Note:** `/ralph-run` has been removed - use `/ralph-go` and choose "Autonomous" for the same behavior.
 
 ## Basic Workflow
 
@@ -40,7 +43,7 @@ Ralph automates feature development with story-based tracking, review gates, and
   ↓
 [Planning: asks questions, generates stories]
   ↓
-/ralph-run (autonomous) or /ralph-next (manual)
+/ralph-go (choose mode) or /ralph-next (manual) or ./ralph-go.sh (terminal)
   ↓
 [Executor agent spawns story workers sequentially]
   ↓
@@ -60,20 +63,65 @@ Ralph creates `.ralph/<feature>/` in your project:
 └── auth-system/
     ├── plan.md         # Feature spec
     ├── prd.json        # Stories with status
-    └── progress.txt    # Work log + patterns
+    ├── progress.txt    # Work log + patterns
+    ├── ralph-go.sh     # Terminal script ⭐
+    └── board/
+        └── index.html  # Visual dashboard
 ```
 
 When complete, moves to `.ralph-archive/<feature>/`
 
 ## Architecture
 
-Ralph uses **agent orchestration** (not bash scripts):
-- **/ralph-run** spawns **ralph-executor** agent
+Ralph uses **agent orchestration** with flexible execution modes:
+- **/ralph-go** offers two modes: terminal script or interactive
+- **Terminal script** calls `/ralph-next` in a loop (CI/CD friendly)
+- **Interactive mode** spawns **ralph-executor** agent
 - Executor spawns **ralph-story-worker** agents (one per story)
 - Each worker gets **fresh context** via Task tool
 - State persists in **prd.json** and **progress.txt**
 
+## Terminal Workflows
+
+Ralph can run from terminal using the generated script:
+
+```bash
+# Navigate to feature directory
+cd .ralph/my-feature
+
+# Run until complete (default: 100 iterations max)
+./ralph-go.sh
+
+# Custom max iterations
+./ralph-go.sh 20
+
+# Background execution
+./ralph-go.sh &
+
+# With output logging
+./ralph-go.sh > ralph.log 2>&1 &
+```
+
+Or use the command for interactive choice:
+```
+/ralph-go
+→ Choose "Terminal Script" or "Autonomous"
+```
+
 ## Usage Examples
+
+### Terminal Mode (Recommended for CI/CD)
+```
+/ralph-new api-endpoints
+→ Review plan
+
+cd .ralph/api-endpoints
+./ralph-go.sh
+→ Script runs autonomously until complete
+
+/ralph-done
+→ Creates PR
+```
 
 ### Interactive Mode (Recommended for learning)
 ```
@@ -92,14 +140,15 @@ Ralph uses **agent orchestration** (not bash scripts):
 → Creates PR
 ```
 
-### Autonomous Mode (For production)
+### Autonomous Mode (For interactive development)
 ```
 /ralph-new payment-flow
 
-/ralph-run
-→ Executor spawns workers sequentially
+/ralph-go
+→ Choose "Autonomous (Current Session)"
+→ Watch progress in Claude Code UI
 
-... watch progress in Claude Code ...
+... executor spawns workers sequentially ...
 
 /ralph-status
 → "7/12 stories complete"
@@ -113,8 +162,13 @@ Ralph uses **agent orchestration** (not bash scripts):
 /ralph-new api-redesign --from docs/api-spec.md
 → Uses your spec instead of asking questions
 
-/ralph-run
-→ Executes all stories autonomously
+./ralph-go.sh
+→ Terminal script executes all stories autonomously
+
+OR
+
+/ralph-go
+→ Choose "Autonomous" for interactive execution
 ```
 
 ## Key Features
