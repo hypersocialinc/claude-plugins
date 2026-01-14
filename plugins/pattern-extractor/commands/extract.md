@@ -15,7 +15,7 @@ Use the Task tool to spawn the extract-pattern agent:
 
 ```
 Task(
-  subagent_type: "extract-pattern",
+  subagent_type: "pattern-extractor:extract-pattern",
   prompt: "{{user_message}}",
   description: "Extract pattern"
 )
