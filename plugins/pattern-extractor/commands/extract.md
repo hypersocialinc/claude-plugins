@@ -11,16 +11,14 @@ examples:
     description: Extract Stripe subscription implementation patterns
 ---
 
-Use the Task tool to invoke the extract-pattern agent and search for the requested pattern.
+Use the Task tool to spawn the extract-pattern agent:
 
-**Task Configuration:**
-- subagent_type: `extract-pattern`
-- description: "Extract pattern"
-- prompt: "{{user_message}}"
+```
+Task(
+  subagent_type: "extract-pattern",
+  prompt: "{{user_message}}",
+  description: "Extract pattern"
+)
+```
 
-The agent will search GitHub repositories and return:
-- Repos containing the pattern
-- Key code snippets with file paths
-- Implementation approach
-- External documentation
-- Recommendations
+The agent will search GitHub repositories and return structured findings with code snippets, implementation approaches, and documentation links.
