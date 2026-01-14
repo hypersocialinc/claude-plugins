@@ -8,12 +8,12 @@
   },
   "plugins": [
     {
-      "name": "hypersocial",
-      "description": "HyperSocial tools including SWARM git worktree manager and extract-pattern agent",
+      "name": "pattern-extractor",
+      "description": "Extract implementation patterns from GitHub repositories with structured analysis and documentation",
       "author": {
         "name": "HyperSocial"
       },
-      "source": "./plugins/hypersocial",
+      "source": "./plugins/pattern-extractor",
       "category": "productivity"
     },
     {
@@ -23,6 +23,15 @@
         "name": "HyperSocial"
       },
       "source": "./plugins/hypersocial/ralph",
+      "category": "productivity"
+    },
+    {
+      "name": "hypersocial",
+      "description": "HyperSocial development tools including SWARM git worktree manager",
+      "author": {
+        "name": "HyperSocial"
+      },
+      "source": "./plugins/hypersocial",
       "category": "productivity"
     }
   ]

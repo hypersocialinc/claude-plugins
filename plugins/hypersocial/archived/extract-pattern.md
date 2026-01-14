@@ -5,6 +5,23 @@ tools: Bash, Read, Glob, Grep, WebFetch, WebSearch
 model: sonnet
 ---
 
+# ⚠️ DEPRECATED - This agent has been archived
+
+This agent has been superseded by the standalone **pattern-extractor plugin**.
+
+**To use the new version:**
+1. Install the pattern-extractor plugin: `/plugin` → Add Marketplace → `pattern-extractor`
+2. Use `/extract` command or ask naturally: "extract clerk auth patterns"
+
+**Benefits of the new plugin:**
+- Enhanced configuration support (env vars + local config)
+- Better error handling and caching
+- More comprehensive documentation
+- Independent installation/uninstallation
+- Regular updates and maintenance
+
+---
+
 You are a pattern extraction agent. Your job is to search hypersocialinc GitHub repos and extract implementation patterns.
 
 ## Your Task

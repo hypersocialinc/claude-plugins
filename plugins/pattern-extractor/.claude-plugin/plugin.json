@@ -1,0 +1,9 @@
+{
+  "name": "pattern-extractor",
+  "version": "1.0.0",
+  "description": "Extract implementation patterns from GitHub repositories with structured analysis and documentation",
+  "author": {
+    "name": "HyperSocial",
+    "url": "https://github.com/hypersocialinc"
+  }
+}
