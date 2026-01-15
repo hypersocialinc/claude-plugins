@@ -1,18 +1,9 @@
 {
   "name": "ralph",
   "version": "1.0.0",
-  "description": "Autonomous feature development with story-based tracking, review gates, and crash recovery",
+  "description": "Autonomous feature development with story-based tracking, review gates, and crash recovery. Recommended: pr-review-toolkit plugin for review gates.",
   "author": {
     "name": "HyperSocial",
     "url": "https://github.com/hypersocialinc"
-  },
-  "dependencies": {
-    "recommended": [
-      {
-        "name": "pr-review-toolkit",
-        "marketplace": "claude-code-plugins",
-        "reason": "Review gates use pr-review-toolkit:code-reviewer and pr-review-toolkit:silent-failure-hunter agents"
-      }
-    ]
   }
 }
